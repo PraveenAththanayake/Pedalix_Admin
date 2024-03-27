@@ -61,11 +61,11 @@ const useFirebaseData = () => {
     const fetchRealtimeDatabaseData = () => {
       const userLocationsRef = ref(database, "user_locations");
 
+      // Use 'onValue' for real-time updates
       onValue(
         userLocationsRef,
         (snapshot) => {
           if (snapshot.exists()) {
-            // Check for data existence
             setUserLocations(
               Object.entries(snapshot.val()).map(([email, location]) => ({
                 email,
@@ -74,8 +74,8 @@ const useFirebaseData = () => {
             );
           }
         },
-        { onlyOnce: true }
-      );
+        { onlyOnce: false }
+      ); // Don't use 'onlyOnce'
     };
 
     fetchFirestoreData();

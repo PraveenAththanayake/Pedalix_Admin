@@ -1,6 +1,8 @@
-"use client";
+// Map.js
 
-import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
+import React from "react";
+import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import useFirebaseData from "@/hooks/useFirebaseData";
 
 const containerStyle = {
   width: "100%",
@@ -24,8 +26,8 @@ const center = {
 };
 
 const pinIcon = {
-  url: "/assets/marker.png",
-  scaledSize: { width: 35, height: 35 },
+  url: "/assets/Record.png",
+  scaledSize: new window.google.maps.Size(30, 30),
 };
 
 const Map = () => {
@@ -33,9 +35,7 @@ const Map = () => {
     googleMapsApiKey: "AIzaSyDfd43AVuZ-MC7bx0nrfSaVKYLN2WBN_yI",
   });
 
-  const markerClicked = () => {
-    console.log("Marker clicked");
-  };
+  const { userLocations } = useFirebaseData();
 
   return isLoaded ? (
     <GoogleMap
@@ -44,11 +44,16 @@ const Map = () => {
       center={center}
       zoom={16}
     >
-      <MarkerF
-        position={{ lat: 6.821414316297818, lng: 80.04168018526603 }}
-        visible={true}
-        onClick={markerClicked}
-      />
+      {userLocations.map((userLocation, index) => (
+        <Marker
+          key={index}
+          position={{
+            lat: userLocation.location.latitude,
+            lng: userLocation.location.longitude,
+          }}
+          icon={pinIcon}
+        />
+      ))}
     </GoogleMap>
   ) : (
     <></>
