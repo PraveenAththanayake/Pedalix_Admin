@@ -6,6 +6,7 @@ import { NavLists } from "@/constants/navLists";
 import Map from "@/components/Map";
 import Users from "@/components/admin_card/users";
 import AddPlaceToMap from "@/components/admin_card/add_dock";
+import Payments from "@/components/admin_card/payments";
 
 export default function UserInfo() {
   const [selectedTab, setSelectedTab] = useState<number | null>(0);
@@ -43,7 +44,7 @@ export default function UserInfo() {
             {selectedTab === 0 ? <Users /> : null}
             {selectedTab === 1 ? <AddPlaceToMap /> : null}
             {selectedTab === 2 ? <Users /> : null}
-            {selectedTab === 3 ? <Users /> : null}
+            {selectedTab === 3 ? <Payments /> : null}
             {selectedTab === 4 ? <Users /> : null}
             {selectedTab === 5 ? <Users /> : null}
           </div>

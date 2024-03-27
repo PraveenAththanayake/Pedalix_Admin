@@ -19,6 +19,12 @@ interface User {
   imageUrl: string;
 }
 
+interface Payments {
+  email: string;
+  amount: number;
+  invoiceNo: string;
+}
+
 interface Station {
   name: string;
   location: { lat: number; lng: number };
@@ -32,6 +38,7 @@ interface UserLocation {
 const useFirebaseData = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
+  const [payments, setPayments] = useState<Payments[]>([]);
   const [userLocations, setUserLocations] = useState<UserLocation[]>([]);
 
   useEffect(() => {
@@ -45,6 +52,25 @@ const useFirebaseData = () => {
         setUsers(
           usersSnapshot.docs.map((doc) => ({
             ...(doc.data() as User),
+            id: doc.id,
+          }))
+        );
+
+        // ... similar fetches for stations and cards
+      } catch (error) {
+        console.error(
+          "Error fetching Firestore data:",
+          (error as Error).message
+        );
+      }
+
+      try {
+        const paymentsSnapshot = await getDocs(
+          collection(firestore, "payments")
+        );
+        setPayments(
+          paymentsSnapshot.docs.map((doc) => ({
+            ...(doc.data() as Payments),
             id: doc.id,
           }))
         );
@@ -82,7 +108,7 @@ const useFirebaseData = () => {
     fetchRealtimeDatabaseData();
   }, []);
 
-  return { users, stations, userLocations };
+  return { users, stations, payments, userLocations };
 };
 
 export default useFirebaseData;
