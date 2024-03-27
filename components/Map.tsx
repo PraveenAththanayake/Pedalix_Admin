@@ -4,11 +4,13 @@ import React from "react";
 import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
 import useFirebaseData from "@/hooks/useFirebaseData";
 
-const containerStyle = {
-  width: "100%",
-  height: "1000px",
-  borderRadius: "10px",
-};
+interface MapProps {
+  center?: google.maps.LatLngLiteral;
+  zoom?: number;
+  onClick?: (event: google.maps.MapMouseEvent) => void;
+  selectedLocation?: google.maps.LatLngLiteral;
+  containerStyle: React.CSSProperties;
+}
 
 const options = {
   mapId: "9f61529698b48602",
@@ -27,10 +29,14 @@ const center = {
 
 const pinIcon = {
   url: "/assets/Record.png",
-  scaledSize: new window.google.maps.Size(30, 30),
 };
 
-const Map = () => {
+const Map = ({
+  zoom = 10,
+  onClick,
+  selectedLocation,
+  containerStyle,
+}: MapProps) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDfd43AVuZ-MC7bx0nrfSaVKYLN2WBN_yI",
   });
@@ -42,7 +48,8 @@ const Map = () => {
       mapContainerStyle={containerStyle}
       options={options}
       center={center}
-      zoom={16}
+      zoom={zoom}
+      onClick={onClick}
     >
       {userLocations.map((userLocation, index) => (
         <Marker
@@ -54,6 +61,7 @@ const Map = () => {
           icon={pinIcon}
         />
       ))}
+      {selectedLocation && <Marker position={selectedLocation} />}
     </GoogleMap>
   ) : (
     <></>
