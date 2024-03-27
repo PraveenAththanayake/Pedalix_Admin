@@ -26,7 +26,7 @@ interface Station {
 
 interface UserLocation {
   email: string;
-  location: { lat: number; lng: number };
+  location: { latitude: number; longitude: number };
 }
 
 const useFirebaseData = () => {
@@ -69,13 +69,13 @@ const useFirebaseData = () => {
             setUserLocations(
               Object.entries(snapshot.val()).map(([email, location]) => ({
                 email,
-                location: location as { lat: number; lng: number },
+                location: location as { latitude: number; longitude: number },
               }))
             );
           }
         },
         { onlyOnce: false }
-      ); // Don't use 'onlyOnce'
+      );
     };
 
     fetchFirestoreData();
