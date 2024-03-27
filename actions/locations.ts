@@ -16,8 +16,8 @@ export const submitLocation = async ({
   try {
     await addDoc(collection(firestore, "stations"), {
       name,
-      lat: parseFloat(lat),
-      lng: parseFloat(lng),
+      lat,
+      lng,
     });
 
     return { success: "Location submitted successfully!" };
