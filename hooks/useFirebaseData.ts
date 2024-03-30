@@ -19,9 +19,20 @@ interface User {
   imageUrl: string;
 }
 
+interface Payments {
+  email: string;
+  amount: number;
+  invoiceNo: string;
+}
+
 interface Station {
   name: string;
   location: { lat: number; lng: number };
+}
+
+interface Notification {
+  email: string;
+  message: string;
 }
 
 interface UserLocation {
@@ -32,7 +43,9 @@ interface UserLocation {
 const useFirebaseData = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [stations, setStations] = useState<Station[]>([]);
+  const [payments, setPayments] = useState<Payments[]>([]);
   const [userLocations, setUserLocations] = useState<UserLocation[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
     const firestore = getFirestore(firebaseApp);
@@ -56,6 +69,44 @@ const useFirebaseData = () => {
           (error as Error).message
         );
       }
+
+      try {
+        const paymentsSnapshot = await getDocs(
+          collection(firestore, "payments")
+        );
+        setPayments(
+          paymentsSnapshot.docs.map((doc) => ({
+            ...(doc.data() as Payments),
+            id: doc.id,
+          }))
+        );
+
+        // ... similar fetches for stations and cards
+      } catch (error) {
+        console.error(
+          "Error fetching Firestore data:",
+          (error as Error).message
+        );
+      }
+
+      try {
+        const notificationsSnapshot = await getDocs(
+          collection(firestore, "notifications")
+        );
+        setNotifications(
+          notificationsSnapshot.docs.map((doc) => ({
+            ...(doc.data() as Notification),
+            id: doc.id,
+          }))
+        );
+      } catch (error) {
+        console.error(
+          "Error fetching Firestore data:",
+          (error as Error).message
+        );
+
+        // ... similar fetches for stations and cards
+      }
     };
 
     const fetchRealtimeDatabaseData = () => {
@@ -75,14 +126,14 @@ const useFirebaseData = () => {
           }
         },
         { onlyOnce: false }
-      ); // Don't use 'onlyOnce'
+      );
     };
 
     fetchFirestoreData();
     fetchRealtimeDatabaseData();
   }, []);
 
-  return { users, stations, userLocations };
+  return { users, stations, payments, notifications, userLocations };
 };
 
 export default useFirebaseData;

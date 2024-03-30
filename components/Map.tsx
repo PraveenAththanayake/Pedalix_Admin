@@ -1,14 +1,14 @@
-// Map.js
-
 import React from "react";
-import { GoogleMap, useJsApiLoader, Marker } from "@react-google-maps/api";
+import { GoogleMap, useJsApiLoader, MarkerF } from "@react-google-maps/api";
 import useFirebaseData from "@/hooks/useFirebaseData";
 
-const containerStyle = {
-  width: "100%",
-  height: "1000px",
-  borderRadius: "10px",
-};
+interface MapProps {
+  center?: google.maps.LatLngLiteral;
+  zoom?: number;
+  onClick?: (event: google.maps.MapMouseEvent) => void;
+  selectedLocation?: google.maps.LatLngLiteral;
+  containerStyle: React.CSSProperties;
+}
 
 const options = {
   mapId: "9f61529698b48602",
@@ -25,35 +25,44 @@ const center = {
   lng: 80.04150852388756,
 };
 
-const pinIcon = {
-  url: "/assets/Record.png",
-  scaledSize: new window.google.maps.Size(30, 30),
-};
-
-const Map = () => {
+const Map = ({
+  zoom = 10,
+  onClick,
+  selectedLocation,
+  containerStyle,
+}: MapProps) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyDfd43AVuZ-MC7bx0nrfSaVKYLN2WBN_yI",
   });
 
   const { userLocations } = useFirebaseData();
 
+  const pinIcon = isLoaded
+    ? {
+        url: "/assets/Record.png",
+        scaledSize: new google.maps.Size(20, 20), // size in pixels
+      }
+    : {};
+
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
       options={options}
       center={center}
-      zoom={16}
+      zoom={zoom}
+      onClick={onClick}
     >
       {userLocations.map((userLocation, index) => (
-        <Marker
+        <MarkerF
           key={index}
           position={{
             lat: userLocation.location.latitude,
             lng: userLocation.location.longitude,
           }}
-          icon={pinIcon}
+          icon={pinIcon.url ? pinIcon : undefined}
         />
       ))}
+      {selectedLocation && <MarkerF position={selectedLocation} />}
     </GoogleMap>
   ) : (
     <></>

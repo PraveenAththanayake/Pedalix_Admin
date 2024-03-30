@@ -5,6 +5,9 @@ import Navbar from "@/components/Navbar";
 import { NavLists } from "@/constants/navLists";
 import Map from "@/components/Map";
 import Users from "@/components/admin_card/users";
+import AddPlaceToMap from "@/components/admin_card/add_dock";
+import Payments from "@/components/admin_card/payments";
+import Notify from "@/components/admin_card/notifi";
 
 export default function UserInfo() {
   const [selectedTab, setSelectedTab] = useState<number | null>(0);
@@ -13,7 +16,7 @@ export default function UserInfo() {
   };
 
   return (
-    <div className="w-full h-screen">
+    <div className="w-full h-[20vw]">
       <Navbar>
         {NavLists.map((list, index) => (
           <div
@@ -32,15 +35,18 @@ export default function UserInfo() {
       </Navbar>
       <div className="w-full relative top-24 lg:top-28 flexCenter h-max">
         <div className="flex flex-col lg:flex-row gap-6">
-          <div className="w-[90vw] h-[50vw] lg:w-[44vw] lg:min-h-32">
-            <Map />
+          <div className="w-[90vw] h-[10vw] lg:w-[44vw] lg:min-h-32">
+            <Map
+              zoom={15}
+              containerStyle={{ height: "600px", width: "100%" }}
+            />
           </div>
           <div>
             {selectedTab === 0 ? <Users /> : null}
-            {selectedTab === 1 ? <Users /> : null}
+            {selectedTab === 1 ? <AddPlaceToMap /> : null}
             {selectedTab === 2 ? <Users /> : null}
-            {selectedTab === 3 ? <Users /> : null}
-            {selectedTab === 4 ? <Users /> : null}
+            {selectedTab === 3 ? <Payments /> : null}
+            {selectedTab === 4 ? <Notify /> : null}
             {selectedTab === 5 ? <Users /> : null}
           </div>
         </div>
